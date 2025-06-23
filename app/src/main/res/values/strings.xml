@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">FriendCircleModule</string>
+    <string name="app_name">朋友圈</string>
+    <string name="user_name">PumPkin</string>
+    <string name="entry_time">%1$s小时前</string>
 </resources>
