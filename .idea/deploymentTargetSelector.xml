@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-06-23T10:25:40.556572Z">
+        <DropdownSelection timestamp="2025-06-24T06:03:15.821331Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/Users/a123/.android/avd/Pixel_6_Pro.avd" />

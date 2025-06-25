@@ -7,6 +7,8 @@
         android:id="@+id/friend_entry_head"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:background="@drawable/rounded_image"
+        android:clipToOutline="true"
         android:src="@mipmap/tx"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp">
@@ -46,7 +48,7 @@
     </TextView>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.1dp"
         android:background="@color/grey_7D7D7D"
         android:layout_below="@id/friend_entry_time"
         android:layout_marginTop="10dp">

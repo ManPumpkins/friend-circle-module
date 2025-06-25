@@ -1,0 +1,17 @@
+package com.g.mediaselector.model;
+public class ResourceItem {
+    public static final int TYPE_IMAGE = 1;
+    public static final int TYPE_VIDEO = 2;
+
+    public long id;
+    public String path;
+    public int type; // 1:图片 2:视频
+    public long duration; // 视频时长（毫秒）
+
+    public ResourceItem(long id, String path, int type, long duration) {
+        this.id = id;
+        this.path = path;
+        this.type = type;
+        this.duration = duration;
+    }
+}

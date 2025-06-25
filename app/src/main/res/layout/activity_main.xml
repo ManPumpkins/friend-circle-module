@@ -21,14 +21,16 @@
             android:id="@+id/main_btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/arrow_back"
+            android:src="@mipmap/arrow_back_white"
             android:padding="10dp"
             android:layout_gravity="left">
         </ImageView>
         <TextView
+            android:id="@+id/main_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text=""
+            android:textColor="@color/black"
             android:layout_gravity="center"
             android:textStyle="bold"
             android:textSize="20sp">
@@ -37,7 +39,7 @@
             android:id="@+id/main_btn_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/photo_camera"
+            android:src="@mipmap/photo_camera_white"
             android:layout_marginRight="5dp"
             android:padding="10dp"
             android:layout_gravity="right">
