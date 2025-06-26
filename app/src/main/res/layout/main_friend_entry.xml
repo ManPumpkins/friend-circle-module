@@ -35,13 +35,21 @@
         android:layout_alignLeft="@id/friend_entry_name"
         >
     </TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_rv_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/friend_entry_dec"
+        android:paddingHorizontal="70dp">
+    </androidx.recyclerview.widget.RecyclerView>
     <TextView
         android:id="@+id/friend_entry_time"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:text="1小时前"
         android:textSize="8sp"
-        android:layout_below="@id/friend_entry_dec"
+        android:layout_below="@id/main_rv_images"
         android:layout_alignLeft="@id/friend_entry_dec"
         android:layout_marginTop="40dp"
         >

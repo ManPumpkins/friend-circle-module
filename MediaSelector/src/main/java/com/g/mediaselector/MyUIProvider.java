@@ -29,9 +29,4 @@ public class MyUIProvider implements ResourceUIProvider {
         return String.format("%02d:%02d", min, sec);
     }
 
-    @Override
-    public View getCustomToolbar(ToolbarBinding binding, ResourcePickerActivity picker) {
-        binding.btnCancel.setOnClickListener(v -> picker.finish());
-        return binding.getRoot();
-    }
 }

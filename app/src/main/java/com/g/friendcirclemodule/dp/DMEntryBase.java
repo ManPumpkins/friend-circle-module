@@ -1,20 +1,30 @@
 package com.g.friendcirclemodule.dp;
 
 public class DMEntryBase {
+    long id;
     int friendName;
     int friendHead;
     String decStr;
-    Integer[] friendImageId;
-    int time;
-    Integer friendVideoId;
+    String friendImageId;
+    String time;
+    String friendVideoId;
 
-    public DMEntryBase(int friendName, int friendHead, String decStr, Integer[] friendImageId, int time, Integer friendVideoId) {
+    public DMEntryBase(long id, int friendName, int friendHead, String decStr, String friendImageId, String time, String friendVideoId) {
+        this.id = id;
         this.friendName = friendName;
         this.friendHead = friendHead;
         this.decStr = decStr;
         this.friendImageId = friendImageId;
         this.time = time;
         this.friendVideoId = friendVideoId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getFriendName() {
@@ -41,27 +51,27 @@ public class DMEntryBase {
         this.decStr = decStr;
     }
 
-    public Integer[] getFriendImageId() {
+    public String getFriendImageId() {
         return friendImageId;
     }
 
-    public void setFriendImageId(Integer[] friendImageId) {
+    public void setFriendImageId(String friendImageId) {
         this.friendImageId = friendImageId;
     }
 
-    public Integer getFriendVideoId() {
+    public String getFriendVideoId() {
         return friendVideoId;
     }
 
-    public void setFriendVideoId(Integer friendVideoId) {
+    public void setFriendVideoId(String friendVideoId) {
         this.friendVideoId = friendVideoId;
     }
 
-    public int getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }

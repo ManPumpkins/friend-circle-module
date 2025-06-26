@@ -1,22 +1,22 @@
 package com.g.friendcirclemodule.adapter;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.g.friendcirclemodule.R;
 import com.g.friendcirclemodule.databinding.MainFriendEntryBinding;
 import com.g.friendcirclemodule.databinding.MainTopBinding;
 import com.g.friendcirclemodule.dp.DMEntryBase;
+import com.g.mediaselector.model.ResourceItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class DMEntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    List<DMEntryBase>mData;
+public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private DMEntryBase dmEntryBase;
 
     public DMEntryAdapter(List<DMEntryBase> mData) {
         this.mData = mData;
@@ -65,16 +65,26 @@ public class DMEntryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             hvh.binding.mainTopTx.setImageResource(R.mipmap.tx);
         } else {
             ItemViewHolder mfeb = (ItemViewHolder)holder;
-            dmEntryBase = mData.get(position - 1);
+            DMEntryBase dmEntryBase = mData.get(position - 1);
             mfeb.binding.friendEntryName.setText(dmEntryBase.getFriendName());
             mfeb.binding.friendEntryHead.setImageResource(dmEntryBase.getFriendHead());
             mfeb.binding.friendEntryDec.setText(dmEntryBase.getDecStr());
             mfeb.binding.friendEntryTime.setText(mfeb.binding.getRoot().getContext().getString(R.string.entry_time, String.valueOf(dmEntryBase.getTime())));
-        }
-    }
 
-    @Override
-    public int getItemCount() {
-        return mData.size() + 1;
+            mfeb.binding.mainRvImages.setLayoutManager(new GridLayoutManager(holder.itemView.getContext(), 3));
+
+            String str = dmEntryBase.getFriendImageId();
+            String[] arr = str.split(",");  // 按逗号分割
+            List<ResourceItem> list = new ArrayList<>();
+
+            for (String s : arr) {
+                ResourceItem a = new ResourceItem(1, s, 1,0);
+                list.add(a);
+            }
+            MainImageGridAdapter adapter = new MainImageGridAdapter(list);
+            mfeb.binding.mainRvImages.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+
+        }
     }
 }
