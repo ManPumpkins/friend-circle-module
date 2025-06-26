@@ -2,12 +2,10 @@ package com.g.mediaselector.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
-
 import com.g.mediaselector.adapter.ResourceAdapter;
 import com.g.mediaselector.interface_method.OnResourceSelectListener;
 import com.g.mediaselector.interface_method.ResourceUIProvider;

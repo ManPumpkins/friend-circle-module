@@ -1,16 +1,11 @@
-package com.g.friendcirclemodule;
+package com.g.friendcirclemodule.activity;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.viewbinding.ViewBinding;
-
 import com.g.friendcirclemodule.interface_method.BaseBindingInterface;
-
 import java.lang.reflect.Field;
 
 public abstract class BaseActivity<VB extends ViewBinding,VM extends ViewModel> extends AppCompatActivity implements BaseBindingInterface<VB, VM> {
@@ -37,9 +32,14 @@ public abstract class BaseActivity<VB extends ViewBinding,VM extends ViewModel> 
         if (viewbinding != null) {
             setContentView(viewbinding.getRoot());
         }
+        initData();
         initView();
     }
-    protected void initView() {
+    protected void initView() {}
 
+    protected void initData(){}
+
+    protected void onResume() {
+        super.onResume();
     }
 }

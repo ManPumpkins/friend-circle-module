@@ -1,17 +1,13 @@
 package com.g.mediaselector.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.g.mediaselector.interface_method.OnItemClickListener;
 import com.g.mediaselector.model.ResourceItem;
 import com.g.mediaselector.interface_method.ResourceUIProvider;
 import com.g.mediaselector.databinding.ItemRibBinding;
-
 import java.util.List;
 
 public class ResourceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -42,17 +38,13 @@ public class ResourceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemRibBinding rib = ItemRibBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new RIBViewHolder(rib);
-
-//        int layoutId = uiProvider.getItemLayoutId(viewType);
-//        View v = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
-//        return new RecyclerView.ViewHolder(v) {};
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         RIBViewHolder rib = (RIBViewHolder)holder;
         ResourceItem item = data.get(position);

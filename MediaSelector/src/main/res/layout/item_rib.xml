@@ -14,8 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:textColor="#FFF"
-        android:background="#80000000">
+        android:textColor="@color/white"
+        android:background="@color/black_1">
     </TextView>
 
     <View

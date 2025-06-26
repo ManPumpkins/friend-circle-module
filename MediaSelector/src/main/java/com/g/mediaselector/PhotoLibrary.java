@@ -2,7 +2,6 @@ package com.g.mediaselector;
 
 import android.content.Context;
 import android.content.Intent;
-
 import com.g.mediaselector.activity.ResourcePickerActivity;
 import com.g.mediaselector.interface_method.OnResourceSelectListener;
 import com.g.mediaselector.interface_method.ResourceUIProvider;

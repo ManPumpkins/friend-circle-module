@@ -1,36 +1,36 @@
-package com.g.friendcirclemodule;
+package com.g.friendcirclemodule.activity;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.g.friendcirclemodule.R;
 import com.g.friendcirclemodule.adapter.DMEntryAdapter;
 import com.g.friendcirclemodule.databinding.ActivityMainBinding;
 import com.g.friendcirclemodule.dp.DMEntryBase;
+import com.g.friendcirclemodule.dp.EditDataManager;
+import com.g.friendcirclemodule.dp.FeedManager;
 import com.g.friendcirclemodule.model.MainActivityModel;
 import com.g.mediaselector.MyUIProvider;
 import com.g.mediaselector.PhotoLibrary;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivityModel> {
-
+    public static Activity hostActivity;
     List<DMEntryBase> mData = new ArrayList<>();
-    DMEntryBase dmEntryBase = new DMEntryBase(R.string.user_name,R.mipmap.tx,"太惨了，但是没关系，否极泰来，肯定是我有好事要发生了！", null,1, null);
     DMEntryAdapter adapter;
-
     int toolbarType = 1;
 
     int offsetY = 0;
 
     @Override
     protected void initView() {
-
+        hostActivity = this;
+        Log.i("dtata" , String.valueOf(FeedManager.getTypeList()));
         viewbinding.mainBtnBack.setOnClickListener(v -> { finish();});
         viewbinding.mainBtnCamera.setOnClickListener(v -> {
             new PhotoLibrary.Builder(this)
@@ -39,14 +39,15 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivity
                     .setUIProvider(new MyUIProvider())
                     .setSelectListener(selectedList -> {
                         Log.i("data_1", selectedList.toString());
+                        EditDataManager.setList(selectedList);
+                        Intent i = new Intent(this, ContentEditingActivity.class);
+                        startActivity(i);
                     })
                     .open();
         });
 
-        List<DMEntryBase> list = new ArrayList<>();
-        for (int i = 0; i < 18; i++) {
-            list.add(dmEntryBase);
-        }
+        List<DMEntryBase> list;
+        list = FeedManager.getTypeList();
         mData.clear();
         mData.addAll(list);
         adapter = new DMEntryAdapter(mData);
@@ -80,5 +81,14 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivity
                 viewbinding.mainToolbar.setBackgroundColor(Color.argb(alpha, 125, 125, 125));
             }
         });
+    }
+
+    protected void onResume() {
+        super.onResume();
+        List<DMEntryBase> list;
+        list = FeedManager.getTypeList();
+        mData.clear();
+        mData.addAll(list);
+        adapter.notifyDataSetChanged();
     }
 }

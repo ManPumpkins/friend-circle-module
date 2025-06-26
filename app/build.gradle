@@ -14,12 +14,16 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters "arm64-v8a"
+        }
+
     }
 
     viewBinding {
         enabled = true
     }
-
 
     buildTypes {
         release {
@@ -44,6 +48,9 @@ dependencies {
     implementation libs.livedata
     implementation libs.javalite
     implementation libs.okhttp
+    implementation libs.glide
+    implementation libs.exoplayer
+    implementation libs.exoplayerui
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
