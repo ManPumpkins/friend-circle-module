@@ -80,11 +80,6 @@ public class ResourcePickerActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionUtils.REQUEST_CODE) {
-//            if (PermissionUtils.hasStoragePermission(this)) {
-//                loadData();
-//            } else {
-//                finish();
-//            }
             loadData();
         }
     }

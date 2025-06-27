@@ -24,9 +24,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivity
     List<DMEntryBase> mData = new ArrayList<>();
     DMEntryAdapter adapter;
     int toolbarType = 1;
-
     int offsetY = 0;
-
     @Override
     protected void initView() {
         hostActivity = this;

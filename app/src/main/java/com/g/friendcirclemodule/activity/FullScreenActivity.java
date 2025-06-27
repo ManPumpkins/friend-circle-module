@@ -10,6 +10,8 @@ import com.g.friendcirclemodule.model.FullScreenActivityModel;
 import com.g.mediaselector.model.ResourceItem;
 
 public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding, FullScreenActivityModel> {
+
+    private ExoPlayer player;
     @Override
     protected void initView() {
         viewbinding.fullBtnClose.setOnClickListener(v -> {finish();});
@@ -29,12 +31,17 @@ public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding, 
         } else {
             viewbinding.fullVideo.setVisibility(View.VISIBLE);
             viewbinding.fullImage.setVisibility(View.GONE);
-            ExoPlayer player = new ExoPlayer.Builder(viewbinding.getRoot().getContext()).build();
+            player = new ExoPlayer.Builder(viewbinding.getRoot().getContext()).build();
             viewbinding.fullVideo.setPlayer(player);
             MediaItem mediaItem = MediaItem.fromUri(path);
             player.setMediaItem(mediaItem);
             player.prepare();
             player.play();
         }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        player.release();
     }
 }

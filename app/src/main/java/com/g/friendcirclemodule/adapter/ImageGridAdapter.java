@@ -17,6 +17,7 @@ import java.util.List;
 public class ImageGridAdapter extends BaseAdapter<ResourceItem> {
 
     private OnItemClickListener onItemClickListener;
+    private ExoPlayer player;
 
     public ImageGridAdapter(List<ResourceItem> mData) {
         this.mData = mData;
@@ -57,14 +58,12 @@ public class ImageGridAdapter extends BaseAdapter<ResourceItem> {
                 vh.binding.videoTime.setVisibility(View.VISIBLE);
                 vh.binding.ivImage.setVisibility(View.GONE);
                 // 1. 初始化播放器
-                ExoPlayer player = new ExoPlayer.Builder(vh.binding.getRoot().getContext()).build();
+                player = new ExoPlayer.Builder(vh.binding.getRoot().getContext()).build();
                 vh.binding.playerView.setPlayer(player);
-
                 // 2. 设置媒体源（支持本地/网络URI）
                 MediaItem mediaItem = MediaItem.fromUri(item.path);
                 player.setMediaItem(mediaItem);
                 player.prepare();
-                player.play();
             }
         }
         // 点击事件
@@ -99,6 +98,15 @@ public class ImageGridAdapter extends BaseAdapter<ResourceItem> {
     public void removeItem(int position) {
         mData.remove(position);
         notifyItemRemoved(position);
+    }
+
+    // 停止当前播放的视频
+    public void stopCurrentPlayer() {
+        if (player != null) {
+            player.stop();
+            player.release();
+            player = null;
+        }
     }
 
 

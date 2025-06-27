@@ -121,5 +121,11 @@ public class ContentEditingActivity extends BaseActivity<ActivityContentEditingB
         list.addAll(EditDataManager.getList());
         adapter.notifyDataSetChanged();
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // 释放播放器资源
+        adapter.stopCurrentPlayer();
+    }
 
 }
