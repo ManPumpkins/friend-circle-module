@@ -62,12 +62,15 @@
         </androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
     <ImageView
+        android:visibility="gone"
         android:id="@+id/deleteArea"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:src="@mipmap/delete"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:scaleType="center"
-        android:padding="10dp" />
+        android:padding="10dp">
+    </ImageView>
 
 </RelativeLayout>

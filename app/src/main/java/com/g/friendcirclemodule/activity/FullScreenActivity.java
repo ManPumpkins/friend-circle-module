@@ -42,6 +42,8 @@ public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding, 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        player.release();
+        if (player != null) {
+            player.release();
+        }
     }
 }

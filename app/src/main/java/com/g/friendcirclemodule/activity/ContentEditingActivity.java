@@ -1,11 +1,9 @@
 package com.g.friendcirclemodule.activity;
 
-import android.content.ClipData;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.View;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import com.g.friendcirclemodule.R;
 import com.g.friendcirclemodule.adapter.ImageGridAdapter;
 import com.g.friendcirclemodule.databinding.ActivityContentEditingBinding;
@@ -75,39 +73,24 @@ public class ContentEditingActivity extends BaseActivity<ActivityContentEditingB
         viewbinding.rvImages.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         //点击事件
-        adapter.setOnItemClickListener((v, pos) -> {
-            onItemClickListener(v, pos);
+        adapter.setOnItemClickListener((hv) -> {
+            onItemClickListener(hv);
         });
         // 设置 ItemTouchHelper
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new DragToDeleteCallback(adapter, viewbinding.deleteArea));
         itemTouchHelper.attachToRecyclerView(viewbinding.rvImages);
-
-        viewbinding.rvImages.setOnDragListener((v, event) -> {
-            if (event.getAction() == DragEvent.ACTION_DROP) {
-                moveItemToTarget(event, adapter);
-            }
-            return true;
-        });
     }
 
-    private void moveItemToTarget(DragEvent event, ImageGridAdapter adapter) {
+    private void onItemClickListener(RecyclerView.ViewHolder hv) {
 
-        ClipData.Item clipItem = event.getClipData().getItemAt(0);
-        String draggedId = clipItem.getText().toString();
-        adapter.removeItem(Integer.parseInt(draggedId));
-        Log.i("idddd", draggedId);
-    }
-
-    private void onItemClickListener(View view, int position) {
-
-        if (position == (list.size())) {
+        if (hv.getBindingAdapterPosition() == (list.size())) {
             new PhotoLibrary.Builder(this)
                     .setMode(PhotoLibrary.MODE_ALL)
                     .setMultiSelect(true)
                     .setUIProvider(new MyUIProvider())
                     .setSelectListener(selectedList -> {
                         Log.i("data_1", selectedList.toString());
-                        EditDataManager.setList(selectedList);
+                        EditDataManager.addList(selectedList);
                         onResume();
                     })
                     .open();
@@ -117,6 +100,7 @@ public class ContentEditingActivity extends BaseActivity<ActivityContentEditingB
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("datass", String.valueOf(EditDataManager.getList()));
         list.clear();
         list.addAll(EditDataManager.getList());
         adapter.notifyDataSetChanged();

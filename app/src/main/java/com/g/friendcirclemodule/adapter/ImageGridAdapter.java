@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.g.friendcirclemodule.R;
 import com.g.friendcirclemodule.databinding.CeRibItemBinding;
+import com.g.friendcirclemodule.dp.EditDataManager;
 import com.g.mediaselector.model.ResourceItem;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ImageGridAdapter extends BaseAdapter<ResourceItem> {
     }
 
     // 主ViewHolder
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CeRibItemBinding binding;
         ViewHolder(CeRibItemBinding binding) {
             super(binding.getRoot());
@@ -49,7 +50,7 @@ public class ImageGridAdapter extends BaseAdapter<ResourceItem> {
         if (position == (this.mData.size())) {
             vh.binding.ivImage.setImageResource(R.mipmap.add);
         } else {
-            ResourceItem item = mData.get(position);
+            ResourceItem item = this.mData.get(position);
             Log.i("type_1122", String.valueOf(item.type));
             if (item.type == ResourceItem.TYPE_IMAGE) {
                 Glide.with(vh.binding.getRoot()).load(item.path).into(vh.binding.ivImage); // Glide加载
@@ -69,12 +70,12 @@ public class ImageGridAdapter extends BaseAdapter<ResourceItem> {
         // 点击事件
         vh.binding.getRoot().setOnClickListener(view -> {
             if (onItemClickListener != null) {
-                onItemClickListener.onItemClickListener(view, position);
+                onItemClickListener.onItemClickListener(vh);
             }
         });
     }
     public interface OnItemClickListener {
-        void onItemClickListener(View view, int position);
+        void onItemClickListener(ViewHolder vh);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -85,6 +86,7 @@ public class ImageGridAdapter extends BaseAdapter<ResourceItem> {
             return;
         }
         // 拖动排序时交换数据
+        EditDataManager.onItemMove(fromPosition, toPosition);
         ResourceItem fromImage = this.mData.get(fromPosition);
         this.mData.remove(fromPosition);
         this.mData.add(toPosition, fromImage);
@@ -92,11 +94,16 @@ public class ImageGridAdapter extends BaseAdapter<ResourceItem> {
     }
 
     public ResourceItem getItem(int position) {
-        return mData.get(position);
+        return this.mData.get(position);
+    }
+
+    public List<ResourceItem> getData() {
+        return this.mData;
     }
 
     public void removeItem(int position) {
-        mData.remove(position);
+        this.mData.remove(position);
+        EditDataManager.removeItem(position);
         notifyItemRemoved(position);
     }
 
