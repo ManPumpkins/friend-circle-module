@@ -29,5 +29,14 @@
         android:layout_marginTop="10dp"
         android:padding="10dp">
     </ImageView>
+    <ImageView
+        android:id="@+id/full_btn_play_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/play_circle"
+        android:layout_centerInParent="true"
+        android:alpha="0"
+        android:padding="10dp">
+    </ImageView>
 
 </RelativeLayout>
