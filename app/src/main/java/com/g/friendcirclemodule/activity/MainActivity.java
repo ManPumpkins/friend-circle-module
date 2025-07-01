@@ -1,10 +1,16 @@
 package com.g.friendcirclemodule.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.g.friendcirclemodule.R;
@@ -26,6 +32,22 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivity
     DMEntryAdapter adapter;
     int toolbarType = 1;
     int offsetY = 0;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(this) // 注册广播接收器
+                .registerReceiver(receiver, new IntentFilter("ACTION_DIALOG_CLOSED"));
+    }
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("ACTION_DIALOG_CLOSED".equals(intent.getAction())) {
+                onResume();
+            }
+        }
+    };
+
     @Override
     protected void initView() {
         hostActivity = this;
@@ -52,6 +74,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivity
         adapter = new DMEntryAdapter(mData);
         viewbinding.mainRecycler.setLayoutManager(new LinearLayoutManager(this));
         viewbinding.mainRecycler.setAdapter(adapter);
+        viewbinding.mainRecycler.setItemViewCacheSize(20); // 增大缓存池大小
         adapter.setOnItemClickListener(new DMEntryAdapter.OnItemClickListener() {
             @Override
             public void onItemClickListener(DMEntryAdapter.HeaderViewHolder hvh) {

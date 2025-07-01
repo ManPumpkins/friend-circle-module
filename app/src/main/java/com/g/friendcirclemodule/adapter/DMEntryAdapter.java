@@ -76,15 +76,10 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (position == 0) {
             HeaderViewHolder hvh = (HeaderViewHolder)holder;
-            List<DMEntryUseInfoBase> infoBaseList = FeedManager.getUseInfo(1);
-            if (!infoBaseList.isEmpty()) {
-                DMEntryUseInfoBase dmEntryUseInfoBase = infoBaseList.get(0);
+            List<DMEntryUseInfoBase> headInfoBaseList = FeedManager.getUseInfo(1, 1);
+            if (!headInfoBaseList.isEmpty()) {
+                DMEntryUseInfoBase dmEntryUseInfoBase = headInfoBaseList.get(0);
                 Log.i("dddddd", String.valueOf(dmEntryUseInfoBase.getFriendName()));
-                if (dmEntryUseInfoBase.getFriendName() != "" && dmEntryUseInfoBase.getFriendName() != null) {
-                    hvh.binding.mainTopName.setText(dmEntryUseInfoBase.getFriendName());
-                } else {
-                    hvh.binding.mainTopName.setText(R.string.user_name);
-                }
                 if (dmEntryUseInfoBase.getFriendHead() != "" && dmEntryUseInfoBase.getFriendHead() != null) {
                     Bitmap croppedBitmap = null;
                     try {
@@ -97,8 +92,20 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
                     hvh.binding.mainTopTx.setImageResource(R.mipmap.tx);
                 }
             } else {
-                hvh.binding.mainTopName.setText(R.string.user_name);
                 hvh.binding.mainTopTx.setImageResource(R.mipmap.tx);
+            }
+
+            List<DMEntryUseInfoBase> nameInfoBaseList = FeedManager.getUseInfo(2, 1);
+            if (!nameInfoBaseList.isEmpty()) {
+                DMEntryUseInfoBase dmEntryUseInfoBase = nameInfoBaseList.get(0);
+                Log.i("dddddd", String.valueOf(dmEntryUseInfoBase.getFriendName()));
+                if (dmEntryUseInfoBase.getFriendName() != "" && dmEntryUseInfoBase.getFriendName() != null) {
+                    hvh.binding.mainTopName.setText(dmEntryUseInfoBase.getFriendName());
+                } else {
+                    hvh.binding.mainTopName.setText(R.string.user_name);
+                }
+            } else {
+                hvh.binding.mainTopName.setText(R.string.user_name);
             }
 
             // 点击事件
@@ -111,14 +118,9 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
         } else {
             ItemViewHolder mfeb = (ItemViewHolder)holder;
             DMEntryBase dmEntryBase = mData.get(position - 1);
-            List<DMEntryUseInfoBase> infoBaseList = FeedManager.getUseInfo(dmEntryBase.getUseId());
-            if (!infoBaseList.isEmpty()) {
-                DMEntryUseInfoBase dmEntryUseInfoBase = infoBaseList.get(0);
-                if (!Objects.equals(dmEntryUseInfoBase.getFriendName(), "") && dmEntryUseInfoBase.getFriendName() != null) {
-                    mfeb.binding.friendEntryName.setText(dmEntryUseInfoBase.getFriendName());
-                } else {
-                    mfeb.binding.friendEntryName.setText(R.string.user_name);
-                }
+            List<DMEntryUseInfoBase> headInfoBaseList = FeedManager.getUseInfo(1, dmEntryBase.getUseId());
+            if (!headInfoBaseList.isEmpty()) {
+                DMEntryUseInfoBase dmEntryUseInfoBase = headInfoBaseList.get(0);
                 if (!Objects.equals(dmEntryUseInfoBase.getFriendHead(), "") && dmEntryUseInfoBase.getFriendHead() != null) {
                     Bitmap croppedBitmap = null;
                     try {
@@ -131,8 +133,19 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
                     mfeb.binding.friendEntryHead.setImageResource(R.mipmap.tx);
                 }
             } else {
-                mfeb.binding.friendEntryName.setText(R.string.user_name);
                 mfeb.binding.friendEntryHead.setImageResource(R.mipmap.tx);
+            }
+
+            List<DMEntryUseInfoBase> nameInfoBaseList = FeedManager.getUseInfo(2, dmEntryBase.getUseId());
+            if (!nameInfoBaseList.isEmpty()) {
+                DMEntryUseInfoBase dmEntryUseInfoBase = nameInfoBaseList.get(0);
+                if (!Objects.equals(dmEntryUseInfoBase.getFriendName(), "") && dmEntryUseInfoBase.getFriendName() != null) {
+                    mfeb.binding.friendEntryName.setText(dmEntryUseInfoBase.getFriendName());
+                } else {
+                    mfeb.binding.friendEntryName.setText(R.string.user_name);
+                }
+            } else {
+                mfeb.binding.friendEntryName.setText(R.string.user_name);
             }
             mfeb.binding.friendEntryDec.setText(dmEntryBase.getDecStr());
             mfeb.binding.friendEntryTime.setText(mfeb.binding.getRoot().getContext().getString(R.string.entry_time, String.valueOf(dmEntryBase.getTime())));

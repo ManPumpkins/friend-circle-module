@@ -33,10 +33,10 @@ public class FeedManager {
         }
         return list;
     }
-    public static List<DMEntryUseInfoBase>getUseInfo(int uId){
+    public static List<DMEntryUseInfoBase>getUseInfo(long lId, int uId){
         List<DMEntryUseInfoBase> list = new ArrayList<>();
-        String sql = "SELECT * FROM userinfo WHERE useId=? ORDER BY id DESC";
-        Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(uId)});
+        String sql = "SELECT * FROM userinfo WHERE id=? and useId=? ORDER BY id DESC";
+        Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(lId), String.valueOf(uId)});
         while (cursor.moveToNext()) {
             long id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
             int useId = cursor.getInt(cursor.getColumnIndexOrThrow("useId"));
@@ -76,7 +76,7 @@ public class FeedManager {
         if (!Objects.equals(bean.getFriendHead(), "")) {
             values.put("friendHead",bean.getFriendHead());
         }
-        db.insert("userinfo", null,values);
+        db.insertWithOnConflict("userinfo", null, values, SQLiteDatabase.CONFLICT_REPLACE);
         Log.i("dataLog", "插入：" + values);
     }
 

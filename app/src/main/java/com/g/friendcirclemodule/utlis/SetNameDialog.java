@@ -2,6 +2,7 @@ package com.g.friendcirclemodule.utlis;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.g.friendcirclemodule.R;
 import com.g.friendcirclemodule.databinding.SetNameDialogBinding;
@@ -36,7 +38,6 @@ public class SetNameDialog extends BaseDialog<SetNameDialogBinding, BaseModel> {
         super(context);
     }
 
-
     @Override
     protected void initView() {
         super.initView();
@@ -46,15 +47,11 @@ public class SetNameDialog extends BaseDialog<SetNameDialogBinding, BaseModel> {
         viewbinding.setNameBtnEnsure.setOnClickListener(v -> {
             String name = String.valueOf(viewbinding.setNameEt.getText());
             Log.i("dddddd", name);
-            DMEntryUseInfoBase dmEntryBase = new DMEntryUseInfoBase(1, uId,name, "");
+            DMEntryUseInfoBase dmEntryBase = new DMEntryUseInfoBase(2, uId,name, "");
             FeedManager.InsertItemToUserInfo(dmEntryBase);
+            onDismiss();
             cancel();
         });
-    }
-
-    // 获取输入数据方法
-    public String getEditText() {
-        return viewbinding.setNameEt.getText().toString().trim();
     }
 
     //设置尺寸
@@ -82,6 +79,14 @@ public class SetNameDialog extends BaseDialog<SetNameDialogBinding, BaseModel> {
 
         handler.sendEmptyMessageDelayed(1,100);
     }
+
+    public void onDismiss() {
+        Intent intent = new Intent("ACTION_DIALOG_CLOSED");
+        intent.putExtra("data_key", "更新数据");
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+    }
+
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {

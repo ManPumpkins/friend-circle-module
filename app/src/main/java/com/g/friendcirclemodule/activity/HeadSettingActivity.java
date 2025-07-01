@@ -33,9 +33,9 @@ public class HeadSettingActivity extends BaseActivity<ActivityHeadSettingBinding
     protected void initView() {
         super.initView();
 
-        List<DMEntryUseInfoBase> infoBaseList = FeedManager.getUseInfo(uId);
-        if (!infoBaseList.isEmpty()) {
-            DMEntryUseInfoBase dmEntryUseInfoBase = infoBaseList.get(0);
+        List<DMEntryUseInfoBase> headInfoBaseList = FeedManager.getUseInfo(1, uId);
+        if (!headInfoBaseList.isEmpty()) {
+            DMEntryUseInfoBase dmEntryUseInfoBase = headInfoBaseList.get(0);
             Log.i("dddddd", String.valueOf(dmEntryUseInfoBase.getFriendHead()));
             if (dmEntryUseInfoBase.getFriendHead() != "" && dmEntryUseInfoBase.getFriendHead() != null) {
                 Bitmap useHeadBitmap = null;
