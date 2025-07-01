@@ -7,6 +7,10 @@ import com.g.friendcirclemodule.activity.HeadSettingActivity;
 import com.g.friendcirclemodule.databinding.SettingDialogBinding;
 import com.g.friendcirclemodule.model.BaseModel;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Locale;
+
 public class SettingDialog extends BaseDialog<SettingDialogBinding, BaseModel>  {
     public SettingDialog(@NonNull Context context) {
         super(context);
@@ -20,6 +24,11 @@ public class SettingDialog extends BaseDialog<SettingDialogBinding, BaseModel>  
             this.getContext().startActivity(i);
             cancel();
         });
-        viewbinding.settingSetName.setOnClickListener(v -> {});
+        viewbinding.settingSetName.setOnClickListener(v -> {
+            SetNameDialog dialog = new SetNameDialog(this.getContext());
+            dialog.show();
+            dialog.setDialogSize();
+            cancel();
+        });
     }
 }

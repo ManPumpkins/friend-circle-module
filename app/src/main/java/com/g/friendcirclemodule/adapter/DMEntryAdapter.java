@@ -79,7 +79,7 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
             List<DMEntryUseInfoBase> infoBaseList = FeedManager.getUseInfo(1);
             if (!infoBaseList.isEmpty()) {
                 DMEntryUseInfoBase dmEntryUseInfoBase = infoBaseList.get(0);
-                Log.i("dddddd", String.valueOf(dmEntryUseInfoBase.getFriendHead()));
+                Log.i("dddddd", String.valueOf(dmEntryUseInfoBase.getFriendName()));
                 if (dmEntryUseInfoBase.getFriendName() != "" && dmEntryUseInfoBase.getFriendName() != null) {
                     hvh.binding.mainTopName.setText(dmEntryUseInfoBase.getFriendName());
                 } else {

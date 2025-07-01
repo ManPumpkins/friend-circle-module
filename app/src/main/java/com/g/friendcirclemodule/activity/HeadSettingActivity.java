@@ -81,15 +81,6 @@ public class HeadSettingActivity extends BaseActivity<ActivityHeadSettingBinding
             if (useHeadUri != null) {
                 handleUseHeadImage(useHeadUri);
             }
-        } else if (requestCode == UCrop.REQUEST_CROP) {
-            // 裁切失败
-            Throwable cropError = null;
-            if (data != null) {
-                cropError = UCrop.getError(data);
-            }
-            if (cropError != null) {
-                Toast.makeText(this, "Crop error: " + cropError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
         }
     }
 
@@ -135,7 +126,6 @@ public class HeadSettingActivity extends BaseActivity<ActivityHeadSettingBinding
         try (FileOutputStream fos = new FileOutputStream(file)) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
-            Toast.makeText(this, "" + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
         } catch (IOException ignored) {}
     }
 }
