@@ -2,18 +2,16 @@ package com.g.friendcirclemodule.dp;
 
 public class DMEntryBase {
     long id;
-    int friendName;
-    int friendHead;
+    int useId;
     String decStr;
     String friendImageId;
     String time;
     String friendVideoId;
     String friendVideoTime;
 
-    public DMEntryBase(long id, int friendName, int friendHead, String decStr, String friendImageId, String time, String friendVideoId, String friendVideoTime) {
+    public DMEntryBase(long id, int useId, String decStr, String friendImageId, String time, String friendVideoId, String friendVideoTime) {
         this.id = id;
-        this.friendName = friendName;
-        this.friendHead = friendHead;
+        this.useId = useId;
         this.decStr = decStr;
         this.friendImageId = friendImageId;
         this.time = time;
@@ -29,20 +27,12 @@ public class DMEntryBase {
         this.id = id;
     }
 
-    public int getFriendName() {
-        return friendName;
+    public int getUseId() {
+        return useId;
     }
 
-    public void setFriendName(int friendName) {
-        this.friendName = friendName;
-    }
-
-    public int getFriendHead() {
-        return friendHead;
-    }
-
-    public void setFriendHead(int friendHead) {
-        this.friendHead = friendHead;
+    public void setUseId(int useId) {
+        this.useId = useId;
     }
 
     public String getDecStr() {

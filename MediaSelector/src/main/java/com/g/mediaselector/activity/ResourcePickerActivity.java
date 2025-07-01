@@ -16,6 +16,7 @@ import com.g.mediaselector.databinding.ActivityResourcePickerBinding;
 import com.g.mediaselector.databinding.ToolbarBinding;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ResourcePickerActivity extends Activity {
 
@@ -23,6 +24,7 @@ public class ResourcePickerActivity extends Activity {
     public static ResourceUIProvider staticUIProvider;
     public static int staticMode = 1;
     public static boolean staticMulti = false;
+    public static String topBarName = "";
     private final List<ResourceItem> selected = new ArrayList<>();
 
     ActivityResourcePickerBinding arpb;
@@ -37,8 +39,10 @@ public class ResourcePickerActivity extends Activity {
         arpb.recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
 
         tb = ToolbarBinding.inflate(getLayoutInflater());
+        tb.topBarName.setText(Objects.equals(topBarName, "") ? "资源库" : topBarName);
         arpb.toolbarContainer.setVisibility(View.VISIBLE);
         arpb.toolbarContainer.addView(tb.getRoot());
+        arpb.bottomBar.setVisibility(staticMulti? View.VISIBLE : View.GONE);
         tb.btnCancel.setOnClickListener(v -> finish());
         if (!PermissionUtils.hasStoragePermission(this)) {
             PermissionUtils.requestStoragePermission(this);

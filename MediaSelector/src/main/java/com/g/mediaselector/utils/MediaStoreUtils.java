@@ -1,9 +1,13 @@
 package com.g.mediaselector.utils;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
+
 import com.g.mediaselector.model.ResourceItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +25,12 @@ public class MediaStoreUtils {
                         new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA},
                         null, null, MediaStore.Images.Media.DATE_ADDED + " DESC");
                 if (c != null) {
+                    Uri baseUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                     while (c.moveToNext()) {
                         long id = c.getLong(0);
+                        Uri itemUri = ContentUris.withAppendedId(baseUri, id);
                         String path = c.getString(1);
-                        result.add(new ResourceItem(id, path, ResourceItem.TYPE_IMAGE, 0));
+                        result.add(new ResourceItem(id, path, ResourceItem.TYPE_IMAGE, 0, itemUri));
                     }
                 }
             } else if (mode == 2) { // 视频
@@ -32,11 +38,13 @@ public class MediaStoreUtils {
                         new String[]{MediaStore.Video.Media._ID, MediaStore.Video.Media.DATA, MediaStore.Video.Media.DURATION},
                         null, null, MediaStore.Video.Media.DATE_ADDED + " DESC");
                 if (c != null) {
+                    Uri baseUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                     while (c.moveToNext()) {
                         long id = c.getLong(0);
+                        Uri itemUri = ContentUris.withAppendedId(baseUri, id);
                         String path = c.getString(1);
                         long duration = c.getLong(2);
-                        result.add(new ResourceItem(id, path, ResourceItem.TYPE_VIDEO, duration));
+                        result.add(new ResourceItem(id, path, ResourceItem.TYPE_VIDEO, duration, itemUri));
                     }
                 }
             } else { // 图片+视频
@@ -51,13 +59,16 @@ public class MediaStoreUtils {
                                 + " OR " + MediaStore.Files.FileColumns.MEDIA_TYPE + "=" + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO,
                         null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC");
                 if (c != null) {
+                    Uri baseUri = MediaStore.Files.getContentUri("external");
                     while (c.moveToNext()) {
                         long id = c.getLong(0);
+                        Uri itemUri = ContentUris.withAppendedId(baseUri, id);
                         String path = c.getString(1);
                         int type = c.getInt(2) == MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE ?
                                 ResourceItem.TYPE_IMAGE : ResourceItem.TYPE_VIDEO;
                         long duration = c.isNull(3) ? 0 : c.getLong(3);
-                        result.add(new ResourceItem(id, path, type, duration));
+                        Log.i("dddddd", String.valueOf(itemUri));
+                        result.add(new ResourceItem(id, path, type, duration, itemUri));
                     }
                 }
             }

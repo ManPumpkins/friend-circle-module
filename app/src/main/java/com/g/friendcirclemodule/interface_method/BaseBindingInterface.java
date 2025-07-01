@@ -1,8 +1,12 @@
 package com.g.friendcirclemodule.interface_method;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
+
+import androidx.core.app.DialogCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModel;
@@ -15,18 +19,20 @@ import java.lang.reflect.Type;
 
 public interface BaseBindingInterface<VB extends ViewBinding,VM extends ViewModel> {
     Class[] classArray = {LayoutInflater.class};
-    String[] bv = {"viewbinding", "viewModel"};
+    String[] bv = {"viewbinding", "viewmodel"};
     default void initViewBinding(Object instance, Context context) {
         try {
-            Context mContext;
+            Context mContext = null;
             if (instance instanceof Fragment) {
                 mContext = ((Fragment) instance).getContext();
             } else {
-                mContext = (Context) instance;
+                if (instance instanceof Context) {
+                    mContext = (Context) instance;
+                }
             }
+            Type type = instance.getClass().getGenericSuperclass();
+            ParameterizedType pt = (ParameterizedType) type;
             for (String key : bv) {
-                Type type = instance.getClass().getGenericSuperclass();
-                ParameterizedType pt = (ParameterizedType) type;
                 Object result = null;
                 Field binding = instance.getClass().getField(key);
                 if (key.equals("viewbinding")) {
@@ -49,8 +55,9 @@ public interface BaseBindingInterface<VB extends ViewBinding,VM extends ViewMode
                             vmClass = (Class<VM>) pt.getActualTypeArguments()[1];
                         }
                     }
+                    Log.i("222222", String.valueOf(vmClass));
                     if (vmClass != null) {
-                        FragmentActivity mActivity;
+                        FragmentActivity mActivity = null;
                         if (instance instanceof Fragment) {
                             mActivity = ((Fragment) instance).getActivity();
                         } else {
@@ -61,8 +68,8 @@ public interface BaseBindingInterface<VB extends ViewBinding,VM extends ViewMode
                         }
                     }
                 }
-                Log.i("222222", String.valueOf(result));
                 if (result != null) {
+                    Log.i("222222", String.valueOf(result));
                     binding.setAccessible(true);
                     binding.set(instance, result);
                 }

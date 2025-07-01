@@ -14,6 +14,7 @@ import com.g.friendcirclemodule.dp.DMEntryBase;
 import com.g.friendcirclemodule.dp.EditDataManager;
 import com.g.friendcirclemodule.dp.FeedManager;
 import com.g.friendcirclemodule.model.MainActivityModel;
+import com.g.friendcirclemodule.utlis.SettingDialog;
 import com.g.mediaselector.MyUIProvider;
 import com.g.mediaselector.PhotoLibrary;
 import java.util.ArrayList;
@@ -51,6 +52,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivity
         adapter = new DMEntryAdapter(mData);
         viewbinding.mainRecycler.setLayoutManager(new LinearLayoutManager(this));
         viewbinding.mainRecycler.setAdapter(adapter);
+        adapter.setOnItemClickListener(new DMEntryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClickListener(DMEntryAdapter.HeaderViewHolder hvh) {
+                SettingDialog moreDialog = new SettingDialog(hostActivity);
+                moreDialog.show();
+            }
+        });
         viewbinding.mainRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() { // 监听方法
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

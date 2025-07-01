@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FeedManager {
     private static SQLiteDatabase db;
@@ -21,14 +22,27 @@ public class FeedManager {
         Cursor cursor = db.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             long id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-            int friendName = cursor.getInt(cursor.getColumnIndexOrThrow("friendName"));
-            int friendHead = cursor.getInt(cursor.getColumnIndexOrThrow("friendHead"));
+            int useId = cursor.getInt(cursor.getColumnIndexOrThrow("useId"));
             String decStr = cursor.getString(cursor.getColumnIndexOrThrow("decStr"));
             String friendImageId = cursor.getString(cursor.getColumnIndexOrThrow("friendImageId"));
             String time = cursor.getString(cursor.getColumnIndexOrThrow("time"));
             String friendVideoId = cursor.getString(cursor.getColumnIndexOrThrow("friendVideoId"));
             String friendVideoTime = cursor.getString(cursor.getColumnIndexOrThrow("friendVideoTime"));
-            DMEntryBase typeBean = new DMEntryBase(id, friendName, friendHead, decStr, friendImageId, time, friendVideoId, friendVideoTime);
+            DMEntryBase typeBean = new DMEntryBase(id, useId, decStr, friendImageId, time, friendVideoId, friendVideoTime);
+            list.add(typeBean);
+        }
+        return list;
+    }
+    public static List<DMEntryUseInfoBase>getUseInfo(int uId){
+        List<DMEntryUseInfoBase> list = new ArrayList<>();
+        String sql = "SELECT * FROM userinfo WHERE useId=? ORDER BY id DESC";
+        Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(uId)});
+        while (cursor.moveToNext()) {
+            long id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+            int useId = cursor.getInt(cursor.getColumnIndexOrThrow("useId"));
+            String friendName = cursor.getString(cursor.getColumnIndexOrThrow("friendName"));
+            String friendHead = cursor.getString(cursor.getColumnIndexOrThrow("friendHead"));
+            DMEntryUseInfoBase typeBean = new DMEntryUseInfoBase(id, useId, friendName, friendHead);
             list.add(typeBean);
         }
         return list;
@@ -36,11 +50,10 @@ public class FeedManager {
     /*
     表插入
      */
-    public static void insertItemToAccounttb(DMEntryBase bean){
+    public static void InsertItemToAccounttb(DMEntryBase bean){
         ContentValues values = new ContentValues();
         values.put("id",bean.getId());
-        values.put("friendName",bean.getFriendName());
-        values.put("friendHead",bean.getFriendHead());
+        values.put("useId",bean.getUseId());
         values.put("decStr",bean.getDecStr());
         values.put("friendImageId",bean.getFriendImageId());
         values.put("time",bean.getTime());
@@ -49,4 +62,23 @@ public class FeedManager {
         db.insert("accounttb", null,values);
         Log.i("dataLog", "插入：" + values);
     }
+
+    /*
+    表插入
+     */
+    public static void InsertItemToUserInfo(DMEntryUseInfoBase bean){
+        ContentValues values = new ContentValues();
+        values.put("id",bean.getId());
+        values.put("useId",bean.getUseId());
+        if (!Objects.equals(bean.getFriendName(), "")) {
+            values.put("friendName",bean.getFriendName());
+        }
+        if (!Objects.equals(bean.getFriendHead(), "")) {
+            values.put("friendHead",bean.getFriendHead());
+        }
+        db.insert("userinfo", null,values);
+        Log.i("dataLog", "插入：" + values);
+    }
+
+
 }

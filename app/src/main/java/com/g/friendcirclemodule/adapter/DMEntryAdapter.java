@@ -2,7 +2,11 @@ package com.g.friendcirclemodule.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -14,13 +18,20 @@ import com.g.friendcirclemodule.activity.MainActivity;
 import com.g.friendcirclemodule.databinding.MainFriendEntryBinding;
 import com.g.friendcirclemodule.databinding.MainTopBinding;
 import com.g.friendcirclemodule.dp.DMEntryBase;
+import com.g.friendcirclemodule.dp.DMEntryUseInfoBase;
+import com.g.friendcirclemodule.dp.FeedManager;
 import com.g.mediaselector.model.ResourceItem;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
+
+    private OnItemClickListener onItemClickListener;
 
     public DMEntryAdapter(List<DMEntryBase> mData) {
         this.mData = mData;
@@ -65,13 +76,64 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (position == 0) {
             HeaderViewHolder hvh = (HeaderViewHolder)holder;
-            hvh.binding.mainTopName.setText(hvh.binding.getRoot().getContext().getString(R.string.user_name));
-            hvh.binding.mainTopTx.setImageResource(R.mipmap.tx);
+            List<DMEntryUseInfoBase> infoBaseList = FeedManager.getUseInfo(1);
+            if (!infoBaseList.isEmpty()) {
+                DMEntryUseInfoBase dmEntryUseInfoBase = infoBaseList.get(0);
+                Log.i("dddddd", String.valueOf(dmEntryUseInfoBase.getFriendHead()));
+                if (dmEntryUseInfoBase.getFriendName() != "" && dmEntryUseInfoBase.getFriendName() != null) {
+                    hvh.binding.mainTopName.setText(dmEntryUseInfoBase.getFriendName());
+                } else {
+                    hvh.binding.mainTopName.setText(R.string.user_name);
+                }
+                if (dmEntryUseInfoBase.getFriendHead() != "" && dmEntryUseInfoBase.getFriendHead() != null) {
+                    Bitmap croppedBitmap = null;
+                    try {
+                        croppedBitmap = BitmapFactory.decodeStream(hvh.binding.getRoot().getContext().getContentResolver().openInputStream(Uri.parse(dmEntryUseInfoBase.getFriendHead())));
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    hvh.binding.mainTopTx.setImageBitmap(croppedBitmap);
+                } else {
+                    hvh.binding.mainTopTx.setImageResource(R.mipmap.tx);
+                }
+            } else {
+                hvh.binding.mainTopName.setText(R.string.user_name);
+                hvh.binding.mainTopTx.setImageResource(R.mipmap.tx);
+            }
+
+            // 点击事件
+            hvh.binding.mainTopTx.setOnClickListener(view -> {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClickListener(hvh);
+                }
+            });
+
         } else {
             ItemViewHolder mfeb = (ItemViewHolder)holder;
             DMEntryBase dmEntryBase = mData.get(position - 1);
-            mfeb.binding.friendEntryName.setText(dmEntryBase.getFriendName());
-            mfeb.binding.friendEntryHead.setImageResource(dmEntryBase.getFriendHead());
+            List<DMEntryUseInfoBase> infoBaseList = FeedManager.getUseInfo(dmEntryBase.getUseId());
+            if (!infoBaseList.isEmpty()) {
+                DMEntryUseInfoBase dmEntryUseInfoBase = infoBaseList.get(0);
+                if (!Objects.equals(dmEntryUseInfoBase.getFriendName(), "") && dmEntryUseInfoBase.getFriendName() != null) {
+                    mfeb.binding.friendEntryName.setText(dmEntryUseInfoBase.getFriendName());
+                } else {
+                    mfeb.binding.friendEntryName.setText(R.string.user_name);
+                }
+                if (!Objects.equals(dmEntryUseInfoBase.getFriendHead(), "") && dmEntryUseInfoBase.getFriendHead() != null) {
+                    Bitmap croppedBitmap = null;
+                    try {
+                        croppedBitmap = BitmapFactory.decodeStream(mfeb.binding.getRoot().getContext().getContentResolver().openInputStream(Uri.parse(dmEntryUseInfoBase.getFriendHead())));
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                    mfeb.binding.friendEntryHead.setImageBitmap(croppedBitmap);
+                } else {
+                    mfeb.binding.friendEntryHead.setImageResource(R.mipmap.tx);
+                }
+            } else {
+                mfeb.binding.friendEntryName.setText(R.string.user_name);
+                mfeb.binding.friendEntryHead.setImageResource(R.mipmap.tx);
+            }
             mfeb.binding.friendEntryDec.setText(dmEntryBase.getDecStr());
             mfeb.binding.friendEntryTime.setText(mfeb.binding.getRoot().getContext().getString(R.string.entry_time, String.valueOf(dmEntryBase.getTime())));
 
@@ -82,7 +144,7 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
             List<ResourceItem> list = new ArrayList<>();
             if (!imageStr.equals("") && imageArr.length >= 1) {
                 for (String s : imageArr) {
-                    ResourceItem a = new ResourceItem(1, s, ResourceItem.TYPE_IMAGE,0);
+                    ResourceItem a = new ResourceItem(1, s, ResourceItem.TYPE_IMAGE,0, null);
                     list.add(a);
                 }
             }
@@ -92,7 +154,7 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
             String[] videoTimeArr = videoTimeStr.split(",");  // 按逗号分割
             if (!videoStr.equals("") && videoArr.length >= 1) {
                 for (int i = 0; i < videoArr.length; i++) {
-                    ResourceItem a = new ResourceItem(2, videoArr[i], ResourceItem.TYPE_VIDEO,Long.parseLong(videoTimeArr[i]));
+                    ResourceItem a = new ResourceItem(2, videoArr[i], ResourceItem.TYPE_VIDEO,Long.parseLong(videoTimeArr[i]), null);
                     list.add(a);
                 }
             }
@@ -111,5 +173,13 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
             adapter.notifyDataSetChanged();
 
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClickListener(HeaderViewHolder hvh);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;  // 接收外部实现的监听器
     }
 }

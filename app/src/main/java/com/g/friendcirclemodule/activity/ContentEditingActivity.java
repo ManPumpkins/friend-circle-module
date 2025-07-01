@@ -39,6 +39,7 @@ public class ContentEditingActivity extends BaseActivity<ActivityContentEditingB
             long id = data.getTime();
             int name = R.string.user_name;
             int tx = R.mipmap.tx;
+            int useId = 1;
             String dec = viewbinding.ceDescribe.getText().toString();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm");
             String time = sdf.format(data);
@@ -63,8 +64,8 @@ public class ContentEditingActivity extends BaseActivity<ActivityContentEditingB
                 }
             }
 
-            DMEntryBase dmEntryBase = new DMEntryBase(id, name, tx, dec, imagePath, time, videoPath, friendVideoTime);
-            FeedManager.insertItemToAccounttb(dmEntryBase);
+            DMEntryBase dmEntryBase = new DMEntryBase(id, useId, dec, imagePath, time, videoPath, friendVideoTime);
+            FeedManager.InsertItemToAccounttb(dmEntryBase);
             finish();
         });
 
