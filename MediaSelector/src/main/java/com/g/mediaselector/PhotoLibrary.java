@@ -52,7 +52,6 @@ public class PhotoLibrary {
             ResourcePickerActivity.staticUIProvider = uiProvider;
             ResourcePickerActivity.staticMode = mode;
             ResourcePickerActivity.staticMulti = multiSelect;
-            ResourcePickerActivity.topBarName = topBarName;
             Intent i = new Intent(context, ResourcePickerActivity.class);
             context.startActivity(i);
         }

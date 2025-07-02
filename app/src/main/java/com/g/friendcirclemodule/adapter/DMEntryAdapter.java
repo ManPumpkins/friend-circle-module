@@ -1,7 +1,6 @@
 package com.g.friendcirclemodule.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -13,11 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.g.friendcirclemodule.R;
-import com.g.friendcirclemodule.dialog.FullScreenDialog;
 import com.g.friendcirclemodule.activity.MainActivity;
 import com.g.friendcirclemodule.databinding.MainFriendEntryBinding;
 import com.g.friendcirclemodule.databinding.MainTopBinding;
-import com.g.friendcirclemodule.dialog.SettingDialog;
+import com.g.friendcirclemodule.dialog.PreviewDialog;
 import com.g.friendcirclemodule.dp.DMEntryBase;
 import com.g.friendcirclemodule.dp.DMEntryUseInfoBase;
 import com.g.friendcirclemodule.dp.FeedManager;
@@ -185,9 +183,12 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
                 bundle.putString("PATH", list.get(position1).path);
                 bundle.putInt("TYPE", list.get(position1).type);
                 Context context = MainActivity.hostActivity;
-                FullScreenDialog moreDialog = new FullScreenDialog(context, bundle);
-                moreDialog.show();
-                moreDialog.setDialogSize();
+//                FullScreenDialog moreDialog = new FullScreenDialog(context, bundle);
+//                moreDialog.show();
+//                moreDialog.setDialogSize();
+                PreviewDialog dialog = new PreviewDialog(context, list, position1);
+                dialog.show();
+                dialog.setDialogSize();
             });
             adapter.notifyDataSetChanged();
 

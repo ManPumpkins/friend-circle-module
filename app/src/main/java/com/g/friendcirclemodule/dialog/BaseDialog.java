@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
@@ -58,6 +59,7 @@ public class BaseDialog<VB extends ViewBinding,VM extends ViewModel> extends Dia
         Window window = getWindow();
 
         WindowManager.LayoutParams wlp = window.getAttributes();
+        Log.i("heightt", String.valueOf(wlp.height));
 
         WindowMetrics windowMetrics = window.getWindowManager().getCurrentWindowMetrics();
         Rect bounds = windowMetrics.getBounds();

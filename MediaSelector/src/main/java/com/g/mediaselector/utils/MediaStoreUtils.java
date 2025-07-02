@@ -7,10 +7,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
-
+import com.g.mediaselector.model.ResourceFolder;
 import com.g.mediaselector.model.ResourceItem;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MediaStoreUtils {
 
@@ -18,7 +22,6 @@ public class MediaStoreUtils {
         List<ResourceItem> result = new ArrayList<>();
         ContentResolver cr = ctx.getContentResolver();
         Cursor c = null;
-
         try {
             if (mode == 1) { // 图片
                 c = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -76,6 +79,36 @@ public class MediaStoreUtils {
             if (c != null) c.close();
         }
         return result;
+    }
+
+    public static List<ResourceFolder> getFolders(Context ctx, int mode) {
+        List<ResourceFolder> folders = new ArrayList<>();
+        Map<String, ResourceFolder> folderMap = new LinkedHashMap<>();
+        List<ResourceItem> allItems = getMedia(ctx, mode);
+
+        for (ResourceItem item : allItems) {
+            File file = new File(item.path);
+            String parent = file.getParent();
+            String folderName = null;
+            if (parent != null) {
+                folderName = parent.substring(parent.lastIndexOf("/") + 1);
+            }
+
+            if (!folderMap.containsKey(parent)) {
+                folderMap.put(parent, new ResourceFolder(folderName, parent));
+            }
+            Objects.requireNonNull(folderMap.get(parent)).items.add(item);
+        }
+
+        ResourceFolder all = new ResourceFolder("全部", "/");
+        all.items.addAll(allItems);
+        if (!all.items.isEmpty()) all.coverPath = all.items.get(0).path;
+        folders.add(all);
+        for (ResourceFolder f : folderMap.values()) {
+            if (!f.items.isEmpty()) f.coverPath = f.items.get(0).path;
+            folders.add(f);
+        }
+        return folders;
     }
 
     public static String formatDuration(long durationMs) {

@@ -52,6 +52,7 @@ dependencies {
     implementation libs.exoplayer
     implementation libs.exoplayerui
     implementation libs.ucrop
+    implementation libs.photoview
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
