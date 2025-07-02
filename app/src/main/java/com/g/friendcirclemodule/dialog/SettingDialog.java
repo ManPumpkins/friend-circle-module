@@ -1,4 +1,4 @@
-package com.g.friendcirclemodule.utlis;
+package com.g.friendcirclemodule.dialog;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,10 +6,6 @@ import androidx.annotation.NonNull;
 import com.g.friendcirclemodule.activity.HeadSettingActivity;
 import com.g.friendcirclemodule.databinding.SettingDialogBinding;
 import com.g.friendcirclemodule.model.BaseModel;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Locale;
 
 public class SettingDialog extends BaseDialog<SettingDialogBinding, BaseModel>  {
     public SettingDialog(@NonNull Context context) {

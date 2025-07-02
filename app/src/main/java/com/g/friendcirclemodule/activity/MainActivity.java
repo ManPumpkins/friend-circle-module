@@ -20,7 +20,7 @@ import com.g.friendcirclemodule.dp.DMEntryBase;
 import com.g.friendcirclemodule.dp.EditDataManager;
 import com.g.friendcirclemodule.dp.FeedManager;
 import com.g.friendcirclemodule.model.MainActivityModel;
-import com.g.friendcirclemodule.utlis.SettingDialog;
+import com.g.friendcirclemodule.dialog.SettingDialog;
 import com.g.mediaselector.MyUIProvider;
 import com.g.mediaselector.PhotoLibrary;
 import java.util.ArrayList;

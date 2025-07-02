@@ -6,17 +6,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.g.friendcirclemodule.R;
-import com.g.friendcirclemodule.activity.FullScreenActivity;
+import com.g.friendcirclemodule.dialog.FullScreenDialog;
 import com.g.friendcirclemodule.activity.MainActivity;
 import com.g.friendcirclemodule.databinding.MainFriendEntryBinding;
 import com.g.friendcirclemodule.databinding.MainTopBinding;
+import com.g.friendcirclemodule.dialog.SettingDialog;
 import com.g.friendcirclemodule.dp.DMEntryBase;
 import com.g.friendcirclemodule.dp.DMEntryUseInfoBase;
 import com.g.friendcirclemodule.dp.FeedManager;
@@ -76,10 +77,10 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (position == 0) {
             HeaderViewHolder hvh = (HeaderViewHolder)holder;
+            // 设置缓存的头像信息
             List<DMEntryUseInfoBase> headInfoBaseList = FeedManager.getUseInfo(1, 1);
             if (!headInfoBaseList.isEmpty()) {
                 DMEntryUseInfoBase dmEntryUseInfoBase = headInfoBaseList.get(0);
-                Log.i("dddddd", String.valueOf(dmEntryUseInfoBase.getFriendName()));
                 if (dmEntryUseInfoBase.getFriendHead() != "" && dmEntryUseInfoBase.getFriendHead() != null) {
                     Bitmap croppedBitmap = null;
                     try {
@@ -95,10 +96,10 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
                 hvh.binding.mainTopTx.setImageResource(R.mipmap.tx);
             }
 
+            // 设置缓存的名称信息
             List<DMEntryUseInfoBase> nameInfoBaseList = FeedManager.getUseInfo(2, 1);
             if (!nameInfoBaseList.isEmpty()) {
                 DMEntryUseInfoBase dmEntryUseInfoBase = nameInfoBaseList.get(0);
-                Log.i("dddddd", String.valueOf(dmEntryUseInfoBase.getFriendName()));
                 if (dmEntryUseInfoBase.getFriendName() != "" && dmEntryUseInfoBase.getFriendName() != null) {
                     hvh.binding.mainTopName.setText(dmEntryUseInfoBase.getFriendName());
                 } else {
@@ -118,6 +119,7 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
         } else {
             ItemViewHolder mfeb = (ItemViewHolder)holder;
             DMEntryBase dmEntryBase = mData.get(position - 1);
+            // 设置缓存的头像信息
             List<DMEntryUseInfoBase> headInfoBaseList = FeedManager.getUseInfo(1, dmEntryBase.getUseId());
             if (!headInfoBaseList.isEmpty()) {
                 DMEntryUseInfoBase dmEntryUseInfoBase = headInfoBaseList.get(0);
@@ -135,7 +137,7 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
             } else {
                 mfeb.binding.friendEntryHead.setImageResource(R.mipmap.tx);
             }
-
+            // 设置缓存的名称信息
             List<DMEntryUseInfoBase> nameInfoBaseList = FeedManager.getUseInfo(2, dmEntryBase.getUseId());
             if (!nameInfoBaseList.isEmpty()) {
                 DMEntryUseInfoBase dmEntryUseInfoBase = nameInfoBaseList.get(0);
@@ -147,9 +149,13 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
             } else {
                 mfeb.binding.friendEntryName.setText(R.string.user_name);
             }
-            mfeb.binding.friendEntryDec.setText(dmEntryBase.getDecStr());
+            if (Objects.equals(dmEntryBase.getDecStr(), "")) {
+                mfeb.binding.friendEntryDec.setVisibility(View.GONE);
+            } else {
+                mfeb.binding.friendEntryDec.setVisibility(View.VISIBLE);
+                mfeb.binding.friendEntryDec.setText(dmEntryBase.getDecStr());
+            }
             mfeb.binding.friendEntryTime.setText(mfeb.binding.getRoot().getContext().getString(R.string.entry_time, String.valueOf(dmEntryBase.getTime())));
-
             mfeb.binding.mainRvImages.setLayoutManager(new GridLayoutManager(holder.itemView.getContext(), 3));
 
             String imageStr = dmEntryBase.getFriendImageId();
@@ -179,9 +185,9 @@ public class DMEntryAdapter extends BaseAdapter<DMEntryBase> {
                 bundle.putString("PATH", list.get(position1).path);
                 bundle.putInt("TYPE", list.get(position1).type);
                 Context context = MainActivity.hostActivity;
-                Intent intent = new Intent(context, FullScreenActivity.class);
-                intent.putExtras(bundle);
-                context.startActivity(intent);
+                FullScreenDialog moreDialog = new FullScreenDialog(context, bundle);
+                moreDialog.show();
+                moreDialog.setDialogSize();
             });
             adapter.notifyDataSetChanged();
 

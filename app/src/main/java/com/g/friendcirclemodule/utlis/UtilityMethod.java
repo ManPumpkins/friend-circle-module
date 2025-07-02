@@ -16,16 +16,15 @@ public class UtilityMethod {
         return String.format("%02d:%02d", min, sec);
     }
 
-    // 安全文件路径转URI
-    public static Uri fileToUri(Context context, File file) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return FileProvider.getUriForFile(
-                    context,
-                    context.getPackageName() + ".fileprovider",
-                    file
-            );
-        } else {
-            return Uri.fromFile(file);
-        }
+    // px转dp
+    public static int pxToDp(Context context, float px) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return (int) (px / density + 0.5f); // 四舍五入
+    }
+
+    // dp转px（反向操作）
+    public static int dpToPx(Context context, float dp) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * density + 0.5f);
     }
 }

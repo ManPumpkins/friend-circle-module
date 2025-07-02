@@ -1,5 +1,8 @@
 package com.g.friendcirclemodule.adapter;
 
+import static com.g.friendcirclemodule.activity.MainActivity.hostActivity;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,10 +10,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
+import com.g.friendcirclemodule.R;
 import com.g.friendcirclemodule.databinding.CeRibItemBinding;
 import com.g.friendcirclemodule.utlis.UtilityMethod;
 import com.g.mediaselector.model.ResourceItem;
-
+import java.io.IOException;
 import java.util.List;
 
 public class MainImageGridAdapter extends BaseAdapter<ResourceItem> {
@@ -42,15 +46,52 @@ public class MainImageGridAdapter extends BaseAdapter<ResourceItem> {
         MainImageGridAdapter.ViewHolder vh = (MainImageGridAdapter.ViewHolder)holder;
         ResourceItem item = mData.get(position);
         Log.i("type_1122", String.valueOf(item.type));
+        ViewGroup.LayoutParams params = vh.binding.ceRib.getLayoutParams();
         vh.binding.playerView.setVisibility(View.GONE);
         vh.binding.ivImage.setVisibility(View.VISIBLE);
         vh.binding.videoTime.setVisibility(View.GONE);
         if (item.type == ResourceItem.TYPE_VIDEO) {
             vh.binding.videoTime.setVisibility(View.VISIBLE);
             vh.binding.videoTime.setText(UtilityMethod.formatDuration(item.duration));
-
         }
-        Glide.with(vh.binding.getRoot()).load(item.path).into(vh.binding.ivImage); // Glide加载
+
+        if (mData.size() == 1) {
+            if (item.type == ResourceItem.TYPE_VIDEO) {
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(item.path); // 支持文件路径或Uri
+                String widthStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+                String heightStr = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+                if (widthStr != null && heightStr != null) {
+                    int width = Integer.parseInt(widthStr);
+                    int height = Integer.parseInt(heightStr);
+                    params.width = UtilityMethod.pxToDp(hostActivity.getBaseContext(), width);
+                    params.height = UtilityMethod.pxToDp(hostActivity.getBaseContext(), height);
+                }
+                try {
+                    retriever.release();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            } else {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true; // 仅解码尺寸
+                BitmapFactory.decodeFile(item.path, options);
+                int width = options.outWidth;
+                int height = options.outHeight;
+                params.width = UtilityMethod.pxToDp(hostActivity.getBaseContext(), width);
+                params.height = UtilityMethod.pxToDp(hostActivity.getBaseContext(), height);
+            }
+        } else {
+            params.width = UtilityMethod.dpToPx(hostActivity.getBaseContext(), 75);
+            params.height = UtilityMethod.dpToPx(hostActivity.getBaseContext(), 75);
+        }
+        vh.binding.ceRib.setLayoutParams(params);
+
+        Glide.with(vh.binding.getRoot())
+                .load(item.path)
+                .placeholder(R.mipmap.add)
+                .into(vh.binding.ivImage); // Glide加载
         // 点击事件
         vh.binding.getRoot().setOnClickListener(view -> {
             if (onItemClickListener != null) {

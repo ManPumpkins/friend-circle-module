@@ -25,9 +25,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FriendCircleModule"
         tools:targetApi="31">
-        <activity
-            android:name=".utlis.SetNameDialog"
-            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -44,9 +41,6 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activity.HeadSettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.FullScreenActivity"
             android:exported="false" />
         <activity
             android:name=".activity.ContentEditingActivity"

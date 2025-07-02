@@ -37,8 +37,6 @@ public class ContentEditingActivity extends BaseActivity<ActivityContentEditingB
         viewbinding.ceBtnPublish.setOnClickListener(v -> {
             Date data = new Date();
             long id = data.getTime();
-            int name = R.string.user_name;
-            int tx = R.mipmap.tx;
             int useId = 1;
             String dec = viewbinding.ceDescribe.getText().toString();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm");

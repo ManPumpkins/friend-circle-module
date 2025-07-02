@@ -29,7 +29,7 @@
         android:id="@+id/friend_entry_dec"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:text="太惨了，但是没关系，否极泰来，肯定是我有好事要发生了！"
+        android:text=""
         android:textSize="12dp"
         android:layout_below="@id/friend_entry_name"
         android:layout_alignLeft="@id/friend_entry_name"
@@ -51,7 +51,7 @@
         android:textSize="8sp"
         android:layout_below="@id/main_rv_images"
         android:layout_alignLeft="@id/friend_entry_dec"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         >
     </TextView>
     <View

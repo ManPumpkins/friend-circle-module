@@ -1,6 +1,7 @@
-package com.g.friendcirclemodule.activity;
+package com.g.friendcirclemodule.dialog;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,28 +10,37 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.exoplayer.ExoPlayer;
-import androidx.media3.ui.PlayerView;
 
 import com.bumptech.glide.Glide;
 import com.g.friendcirclemodule.R;
+import com.g.friendcirclemodule.activity.BaseActivity;
 import com.g.friendcirclemodule.databinding.ActivityFullScreenBinding;
 import com.g.friendcirclemodule.model.FullScreenActivityModel;
 import com.g.mediaselector.model.ResourceItem;
 
-public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding, FullScreenActivityModel> {
+public class FullScreenDialog extends BaseDialog<ActivityFullScreenBinding, FullScreenActivityModel> {
 
     private ExoPlayer player;
     private Handler longPressHandler;
     private boolean isLongPress = false;
     private Runnable longPressRunnable;
+    private Bundle receivedBundle;
+    private int initialX = 0;
+    private int initialY = 0;
+
+    public FullScreenDialog(@NonNull Context context, Bundle receivedBundle) {
+        super(context);
+        this.receivedBundle = receivedBundle;
+
+    }
 
     @Override
     protected void initView() {
-        viewbinding.fullBtnClose.setOnClickListener(v -> {finish();});
-        Bundle receivedBundle = getIntent().getExtras();
+        viewbinding.fullBtnClose.setOnClickListener(v -> {cancel();});
         String path = null;
         if (receivedBundle != null) {
             path = receivedBundle.getString("PATH");
@@ -86,15 +96,23 @@ public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding, 
                 public boolean onTouch(View v, MotionEvent event) {
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
+                            initialX = (int) event.getX();
+                            initialY = (int) event.getY();
                             // 启动长按
                             longPressRunnable = () -> {
                                 isLongPress = true;
                                 setPlaybackSpeed(3.5f);
-                                Toast.makeText(FullScreenActivity.this, "加速播放", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "加速播放", Toast.LENGTH_SHORT).show();
                             };
                             longPressHandler.postDelayed(longPressRunnable, 500); // 500ms 长按时间
                             break;
-
+                        case MotionEvent.ACTION_MOVE:
+                            if ((initialX -(int)event.getX()) > 2 || (initialY -(int)event.getY()) > 2) {
+                                longPressHandler.removeCallbacks(longPressRunnable);
+                                isLongPress = true;
+                            }
+                            Log.d("Touch0000", "手指移动: X=" + event.getX() + ", Y=" + event.getY());
+                            break;
                         case MotionEvent.ACTION_CANCEL:
                         case MotionEvent.ACTION_UP:
                             // 移除长按检测
@@ -118,9 +136,13 @@ public class FullScreenActivity extends BaseActivity<ActivityFullScreenBinding, 
             player.setPlaybackParameters(parameters);
         }
     }
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void setDialogSize() {
+        super.setDialogSize();
+    }
+
+    protected void onDismiss() {
         if (player != null) {
             player.release();
         }
