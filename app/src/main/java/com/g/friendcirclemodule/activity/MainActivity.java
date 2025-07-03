@@ -7,7 +7,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -32,6 +38,10 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivity
     DMEntryAdapter adapter;
     int toolbarType = 1;
     int offsetY = 0;
+    private Handler longPressHandler;
+    private Runnable longPressRunnable;
+
+    boolean isOpne = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,19 +63,64 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainActivity
         hostActivity = this;
         Log.i("dtata" , String.valueOf(FeedManager.getTypeList()));
         viewbinding.mainBtnBack.setOnClickListener(v -> { finish();});
-        viewbinding.mainBtnCamera.setOnClickListener(v -> {
-            new PhotoLibrary.Builder(this)
-                    .setMode(PhotoLibrary.MODE_ALL)
-                    .setMultiSelect(true)
-                    .setUIProvider(new MyUIProvider())
-                    .setSelectListener(selectedList -> {
-                        Log.i("data_1", selectedList.toString());
-                        EditDataManager.setList(selectedList);
-                        Intent i = new Intent(this, ContentEditingActivity.class);
-                        startActivity(i);
-                    })
-                    .open();
+
+        longPressHandler = new Handler(Looper.getMainLooper());
+        viewbinding.mainBtnCamera.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // 启动长按
+                        longPressRunnable = () -> {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("TYPE", 1);
+                            Intent i = new Intent(hostActivity, ContentEditingActivity.class);
+                            i.putExtras(bundle);
+                            startActivity(i);
+                            isOpne = true;
+                        };
+                        longPressHandler.postDelayed(longPressRunnable, 500); // 500ms 长按时间
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                        // 移除长按检测
+                        longPressHandler.removeCallbacks(longPressRunnable);
+                        if (!isOpne) {
+                            new PhotoLibrary.Builder(hostActivity)
+                                    .setMode(PhotoLibrary.MODE_ALL)
+                                    .setMultiSelect(true)
+                                    .setUIProvider(new MyUIProvider())
+                                    .setSelectListener(selectedList -> {
+                                        Log.i("data_1", selectedList.toString());
+                                        EditDataManager.setList(selectedList);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putInt("TYPE", 2);
+                                        Intent i = new Intent(hostActivity, ContentEditingActivity.class);
+                                        i.putExtras(bundle);
+                                        startActivity(i);
+                                    })
+                                    .open();
+                        }
+                        isOpne = false;
+                        break;
+                }
+                return true;
+            }
         });
+
+//        viewbinding.mainBtnCamera.setOnClickListener(v -> {
+//            new PhotoLibrary.Builder(this)
+//                    .setMode(PhotoLibrary.MODE_ALL)
+//                    .setMultiSelect(true)
+//                    .setUIProvider(new MyUIProvider())
+//                    .setSelectListener(selectedList -> {
+//                        Log.i("data_1", selectedList.toString());
+//                        EditDataManager.setList(selectedList);
+//                        Intent i = new Intent(this, ContentEditingActivity.class);
+//                        startActivity(i);
+//                    })
+//                    .open();
+//        });
 
         List<DMEntryBase> list;
         list = FeedManager.getTypeList();

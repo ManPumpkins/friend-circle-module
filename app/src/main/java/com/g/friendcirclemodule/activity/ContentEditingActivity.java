@@ -1,10 +1,10 @@
 package com.g.friendcirclemodule.activity;
 
+import android.os.Bundle;
 import android.util.Log;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import com.g.friendcirclemodule.R;
 import com.g.friendcirclemodule.adapter.ImageGridAdapter;
 import com.g.friendcirclemodule.databinding.ActivityContentEditingBinding;
 import com.g.friendcirclemodule.dp.DMEntryBase;
@@ -24,11 +24,17 @@ import java.util.Objects;
 public class ContentEditingActivity extends BaseActivity<ActivityContentEditingBinding, ContentEditingActivityModel> {
     ImageGridAdapter adapter;
     List<ResourceItem> list = new ArrayList<>();
-
+    int type = 1;
     @Override
     protected void initData() {
-        list.clear();
-        list.addAll(EditDataManager.getList());
+        Bundle receivedBundle = getIntent().getExtras();
+        if (receivedBundle != null) {
+            type = receivedBundle.getInt("TYPE");
+        }
+        if (type == 2) {
+            list.clear();
+            list.addAll(EditDataManager.getList());
+        }
     }
 
     @Override
@@ -67,17 +73,19 @@ public class ContentEditingActivity extends BaseActivity<ActivityContentEditingB
             finish();
         });
 
-        viewbinding.rvImages.setLayoutManager(new GridLayoutManager(this, 3));
-        adapter = new ImageGridAdapter(list);
-        viewbinding.rvImages.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        //点击事件
-        adapter.setOnItemClickListener((hv) -> {
-            onItemClickListener(hv);
-        });
-        // 设置 ItemTouchHelper
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new DragToDeleteCallback(adapter, viewbinding.deleteArea));
-        itemTouchHelper.attachToRecyclerView(viewbinding.rvImages);
+        if (type == 2) {
+            viewbinding.rvImages.setLayoutManager(new GridLayoutManager(this, 3));
+            adapter = new ImageGridAdapter(list);
+            viewbinding.rvImages.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            //点击事件
+            adapter.setOnItemClickListener((hv) -> {
+                onItemClickListener(hv);
+            });
+            // 设置 ItemTouchHelper
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new DragToDeleteCallback(adapter, viewbinding.deleteArea));
+            itemTouchHelper.attachToRecyclerView(viewbinding.rvImages);
+        }
     }
 
     private void onItemClickListener(RecyclerView.ViewHolder hv) {
@@ -99,16 +107,20 @@ public class ContentEditingActivity extends BaseActivity<ActivityContentEditingB
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("datass", String.valueOf(EditDataManager.getList()));
-        list.clear();
-        list.addAll(EditDataManager.getList());
-        adapter.notifyDataSetChanged();
+        if (type == 2) {
+            Log.i("datass", String.valueOf(EditDataManager.getList()));
+            list.clear();
+            list.addAll(EditDataManager.getList());
+            adapter.notifyDataSetChanged();
+        }
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // 释放播放器资源
-        adapter.stopCurrentPlayer();
+        if (type == 2) {
+            // 释放播放器资源
+            adapter.stopCurrentPlayer();
+        }
     }
 
 }

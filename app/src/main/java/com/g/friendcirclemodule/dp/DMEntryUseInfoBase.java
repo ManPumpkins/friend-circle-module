@@ -6,6 +6,7 @@ public class DMEntryUseInfoBase {
     String friendName;
     String friendHead;
 
+    // id 1 为头像 2 为昵称
     public DMEntryUseInfoBase(long id, int useId, String friendName, String friendHead) {
         this.id = id;
         this.useId = useId;

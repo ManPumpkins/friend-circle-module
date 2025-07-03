@@ -11,9 +11,10 @@ import com.g.friendcirclemodule.model.BaseModel;
 import com.g.mediaselector.model.ResourceItem;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PreviewDialog extends BaseDialog<PreviewDialogBinding, BaseModel> {
-    private List<ResourceItem> dataList;
+    private final List<ResourceItem> dataList;
     private final int startPosition;
     private final Context context;
     PreviewPagerAdapter adapter;
@@ -43,14 +44,6 @@ public class PreviewDialog extends BaseDialog<PreviewDialogBinding, BaseModel> {
                 adapter.playVideoAtPosition(position);
                 oldPosition = position;
             }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
-                    // 滑动时暂停当前视频
-//                    adapter.pauseCurrentVideo();
-                }
-            }
         });
 
         updateIndicator(startPosition);
@@ -70,7 +63,7 @@ public class PreviewDialog extends BaseDialog<PreviewDialogBinding, BaseModel> {
 
     @Override
     public void setDialogSize() {
-        getWindow().setLayout(
+        Objects.requireNonNull(getWindow()).setLayout(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT
         );

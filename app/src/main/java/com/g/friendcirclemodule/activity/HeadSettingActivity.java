@@ -91,7 +91,6 @@ public class HeadSettingActivity extends BaseActivity<ActivityHeadSettingBinding
         Uri destinationUri = Uri.fromFile(destinationFile);
         // 配置裁切工具
         UCrop uCrop = UCrop.of(sourceUri, destinationUri);
-
         // 设置裁切的宽高比例为 1:1 (正方形)
         uCrop.withAspectRatio(1, 1);
         // 设置裁切后的图片最大宽高
